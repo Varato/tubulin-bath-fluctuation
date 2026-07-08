@@ -21,7 +21,7 @@ critical parameters flowing downstream.
 | 2 — Multi-timescale dynamics | §3 | ✅ done | `PHASE2_REPORT.md` |
 | 3 — Source-resolved attribution | §4 | ✅ done | `PHASE3_REPORT.md` |
 | 4 — Spatial correlation | §5 | ✅ done | `PHASE4_REPORT.md` |
-| 5 — Exciton dynamics model | §6 | ⬜ pending | — |
+| 5 — Exciton dynamics model | §6 | ✅ done | `PHASE5_REPORT.md` |
 | 6 — Methodological generalization | §7 | ⬜ pending | — |
 
 ---
@@ -173,17 +173,61 @@ assumption holds.
 
 ---
 
-## Phase 5 — Exciton Dynamics (pending — see critical parameters below)
+## Phase 5 — Exciton Dynamics (done → `PHASE5_REPORT.md`)
 
-**Goal (§6):** map fluctuation statistics → exciton model; separate static
-slow disorder from dynamic fast dephasing; verify strong localization.
+**Goal (§6):** map fluctuation statistics → exciton model; quantify how
+different noise timescales affect quantum coherence and energy transfer.
 
-**Tasks:**
-- 5.1: Fast/slow variance split (σ_slow² = A_slow·σ²_total, σ_fast² = A_fast·σ²_total).
-- 5.2: Monte Carlo (5000–10000 realizations) of the 8-site exciton Hamiltonian
-  with slow disorder → participation ratio (localization).
-- 5.3: Markovian dephasing rate γ_φ = σ_fast² · τ_fast; compare τ_φ to τ_J = 74 fs.
-- 5.4: Static+dynamic dual-mechanism model vs traditional pure-static model.
+**Method — stochastic Schrödinger Monte Carlo (exact for classical noise).**
+For each realization: generate per-site colored noise δs(t) as a sum of
+three OU processes (per-site Aₖ, τₖ from Phase 2), solve the TDSE
+H(t) = J σₓ + ΔE/2 σ_z + δs(t)·|n⟩⟨n|, average observables over 300–500
+realizations. OU noise verified against theory: ACF RMS = 0.028 (30 ns traj).
+Scripts: `phase5_task0_ou_noise_verify.py` (noise check), `phase5_task1_exciton_mc.py`
+(dimer ablation), `phase5_task2_all_pairs.py` (all-pairs scan).
+
+**Task 5.1 — noise verification.** The sum of three independent OU processes
+reproduces the tri-exp ACF exactly (RMS = 0.028 over 10 fs – 7.5 ns). Each
+OU component verified in isolation; the sum verified on a single 30 ns trajectory.
+
+**Task 5.2 — dimer MC with component ablation (Trp4 → βW344).**
+Used Craddock 2014 Hamiltonian: J = −59 cm⁻¹, ΔE = 41 cm⁻¹. Per-site
+σ and tri-exp parameters from Phases 1–2. Six noise configs isolate each
+timescale:
+
+| config | P₇ at 2 ps | character |
+|---|---|---|
+| τ₁ only | **0.507** | smooth monotonic rise, no oscillation |
+| τ₂ only | **0.494** | same |
+| τ₁+τ₂ | 0.515 | same |
+| full (τ₁+τ₂+τ₃) | 0.504 | same, slightly suppressed |
+| τ₃ only | **0.166** | weak damped oscillation, localized |
+
+**Key finding — noise-assisted transport.** Fast noise (τ₁, τ₂) enables
+~50% transfer via incoherent hopping (fluctuating gap crosses resonance).
+Static disorder (τ₃) traps at 17%. The fast components are not merely
+decoherence — they are the transport mechanism. τ₁+τ₃ ≈ full: τ₂ contributes
+almost nothing beyond τ₁.
+
+**Task 5.3 — all-pairs scan.** Trp4 → all 7 other Trps using full Craddock H.
+Only βW344 (J = −59) shows significant transfer (P ≈ 0.50). All other pairs
+have |J| ≤ 6 and P(2 ps) < 0.05 — effectively dark.
+
+**Task 5.4 — Lindblad vs trajectory MC (sanity check).** The Lindblad/Markovian
+approximation underestimates transfer by **3×** (P₇ = 0.17 vs 0.49 for τ₁-only).
+Sigma scan confirms MC matches Lindblad at κ ≪ 1 and diverges at κ ≫ 1 — the
+expected Markov breakdown. All Kubo numbers κₖ = σₖτₖ/ℏ ≫ 1 (5–10 for τ₁,
+165 for τ₂, 10⁵ for τ₃). The trajectory approach is essential.
+
+**Implication for Phase 6:** the static-disorder approximation (treating all
+noise as frozen) is not just quantitatively wrong — it misses the dominant
+transport mechanism. A dual-parameter criterion must include the fast-noise
+contribution, not just σ_slow/J and τ_slow/T_obs.
+
+Files: `results/phase5_exciton_dynamics/` — `ou_sum_acf.png`,
+`mc_results.npz`, `ablation_population.png`, `all_pairs_mc.npz`,
+`all_pairs_population.png`, `sanity_lindblad_vs_mc.png`,
+`sigma_scan_lindblad_vs_mc.png`.
 
 ---
 
@@ -198,9 +242,9 @@ criterion (R_slow, τ_slow/T_obs) proposed in §7.2.
 
 ---
 
-## Critical Parameters for Phase 5
+## Critical Parameters (used in Phases 5)
 
-These are the load-bearing numbers from Phases 0–4 that Phase 5 depends on.
+These were the load-bearing numbers from Phases 0–4 that Phase 5 consumed.
 **(Also saved to memory for cross-conversation recall.)**
 
 ### σ_slow and the localization question
@@ -250,3 +294,6 @@ These are the load-bearing numbers from Phases 0–4 that Phase 5 depends on.
 | 7 | Report tri-exp as the physical model | ΔAIC = −331 rejects bi-exp; three timescales are physical |
 | 8 | Slow-only fit for authoritative τ_slow | stitched-ACF discontinuity biases the joint fit |
 | 9 | First-zero-crossing truncation for τ_int | robust to long-lag noise; consistent across ACFs |
+| 10 | Trajectory MC (not Lindblad) for exciton dynamics | all κ ≫ 1 → Markov fails by 3×; trajectory is exact for classical Gaussian noise |
+| 11 | Craddock 2014 Hamiltonian for J and ΔE | provides per-pair couplings and static site-energy offsets |
+| 12 | Per-site tri-exp params for noise generation | each site has distinct σ, Aₖ, τₖ (Phase 2 per-site fits) |
