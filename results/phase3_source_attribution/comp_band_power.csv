@@ -1,0 +1,5 @@
+band,freq_range_cm_inv,total_power_cm2,protein_pct,water_pct,nucleotide_pct,ions_pct
+slow,[0.02,1] cm⁻¹,1288567.26,26.8,54.3,1.3,17.6
+mid,[1.00,50] cm⁻¹,601548.52,39.2,52.1,0.7,8.0
+fast,[50.00,500] cm⁻¹,269821.36,32.8,63.8,0.4,3.1
+ultrafast,[500.00,1668] cm⁻¹,76430.78,35.3,64.5,0.0,0.2

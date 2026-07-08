@@ -1,0 +1,5 @@
+component,A_fast,tau_fast_ps,offset_fast,tau_int_fast_ps,A_slow,tau_slow_ps,offset_slow,tau_int_slow_ps
+protein,0.294,1.8398,0.288,0.541,0.441,2451.58,0.007,1082.16
+water,0.262,1.5994,0.396,0.420,0.321,1171.64,0.006,375.94
+nucleotide,0.609,0.3076,0.347,0.187,0.473,1777.01,0.091,839.93
+ions,0.175,6.0351,0.752,1.058,0.589,973.25,0.062,573.13

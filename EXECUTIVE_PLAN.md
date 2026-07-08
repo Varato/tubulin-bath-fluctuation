@@ -17,10 +17,10 @@ critical parameters flowing downstream.
 | Phase | RESEARCH_PLAN § | Status | Report |
 |---|---|---|---|
 | 0 — Validation gate | §1.6 | ✅ done | (inline) |
-| 1 — Basic statistics & variance decomp | §2 | ✅ done | (inline) |
+| 1 — Basic statistics & variance decomp | §2 | ✅ done | `PHASE1_REPORT.md` |
 | 2 — Multi-timescale dynamics | §3 | ✅ done | `PHASE2_REPORT.md` |
-| 3 — Source-resolved attribution | §4 | ⬜ next | — |
-| 4 — Spatial correlation | §5 | ⬜ pending | — |
+| 3 — Source-resolved attribution | §4 | ✅ done | `PHASE3_REPORT.md` |
+| 4 — Spatial correlation | §5 | ⬜ next | — |
 | 5 — Exciton dynamics model | §6 | ⬜ pending | — |
 | 6 — Methodological generalization | §7 | ⬜ pending | — |
 
@@ -96,25 +96,68 @@ Files: `results/phase2_timescale/` (17 files).
 
 ---
 
-## Phase 3 — Source-Resolved Attribution (next)
+## Phase 3 — Source-Resolved Attribution (done)
 
-**Goal (§4):** attribute the fast/slow fluctuations to physical sources
-(protein, water, nucleotide, ions) and quantify the dipole-orientation
-contribution.
+**Goal (§4):** attribute fluctuations to physical sources (protein, water,
+nucleotide, ions) and quantify the dipole-orientation contribution.
 
-**Tasks:**
-- 3.1: Component-wise ACF + timescale fitting (per-component τ for each of
-  protein/water/nucleotide/ions). Expect water → τ₁/τ₂, protein → τ₃.
-- 3.2: Component-wise PSD decomposition (which source owns which frequency band).
-- 3.3: Dipole-orientation fluctuation contribution (`dmu` autocorrelation,
-  fixed-dipole control test).
+**Task 3.1 — component-wise ACF & τ (validates Phase 2 τ assignments).**
+Computed per-component ACFs on *both* trajectories (plan said fast-only; but
+protein is slow and needs the slow traj). Single-exp + plateau fit, mean over
+sites:
 
-**Inputs available:** `delta_s_{protein,water,nucleotide,ions}` and `dmu` in
-both NPZ files. `E_total` for the control test. All machinery (ACF, PSD)
-exists in `utils.py`.
+| component | τ_fast (ps) | offset | τ_slow (ps) | Phase 2 τ match |
+|---|---|---|---|---|
+| protein | 1.84 | 0.29 | **2452** | ≈ τ₃ (2663 slow-only) ✓ |
+| water | **1.60** | 0.40 | 1172 | ≈ τ₂ (1.70) ✓ |
+| nucleotide | 0.31 | 0.35 | 1777 | minor / intermediate |
+| ions | 6.04 | 0.75 | 973 | minor / intermediate |
 
-**Expected result:** water dominates sub-ps dephasing; protein dominates ns
-static disorder; ions/nucleotide are minor intermediate contributors.
+Bi-exp fast-band fit gives τ₁ ≈ 0.12–0.17 ps across all components — sub-ps but
+**not** matching Phase 2's τ₁ = 0.044 ps. This was a model-resolution artifact
+(bi-exp on the narrow fast band lacks leverage). The **tri-exp per component**
+(the same model Phase 2 used, on the stitched ACF) cleanly validates all three:
+water τ₁ = **0.054 ps** (≈ 0.044 ✓), τ₂ = **1.12 ps** (≈ 1.70 ✓); protein
+τ₃ = **2501 ps** (≈ 2663 ✓). **Conclusion: water owns τ₁ + τ₂, protein owns τ₃.**
+
+**Task 3.2 — component-wise PSD & band attribution.** Stitched per component at
+1 cm⁻¹. Band-resolved power fractions (against uncorrelated Σ_comp):
+
+| band | range (cm⁻¹) | protein | water | nucleotide | ions |
+|---|---|---|---|---|---|
+| slow | 0.02–1 | 26.8% | **54.3%** | 1.3% | 17.6% |
+| mid | 1–50 | 39.2% | **52.1%** | 0.7% | 8.0% |
+| fast | 50–500 | 32.8% | **63.8%** | 0.4% | 3.1% |
+| ultrafast | 500–1668 | 35.3% | **64.5%** | 0.0% | 0.2% |
+
+- Water dominates every band (52–65%); protein is #2 everywhere (27–39%);
+  nucleotide negligible at all frequencies (<1.3%, 1.6–3.2 decades below water);
+  ions are a real slow-band contributor (17.6%) but negligible above 50 cm⁻¹
+  (<3%, 1.3+ decades below water).
+- **Cross-spectral check:** ∫Σ PSD_comp / ∫PSD_total = **1.995 ≈ 2.0**. The
+  component PSDs sum to *double* the measured total — the protein-water
+  anti-correlation causes massive cross-spectral cancellation. This is the
+  frequency-domain confirmation of the Phase 1 screening ratio (R_screen ≈
+  0.5–0.66); independently consistent with σ²_total/Σσ²_comp² ≈ 0.5.
+
+**Task 3.3 — dipole-orientation contribution.**
+- Projection verified to machine precision: δs = **−μ̂·E** (corr = −1.0,
+  rel err 5×10⁻¹⁷).
+- Indole reorientation τ_μ ≈ **17 ns** mean (3.6–25 ns range; βW397 outlier at
+  3.6 ns). Fit on slow traj; fast traj barely decays (C_μ(500 ps) = 0.88).
+- **Exciton-timescale relevance:** C_μ(T_obs = 2 ps) = **0.984** → dipole is
+  98.4% correlated on T_obs → effectively **static** for exciton dynamics.
+- Control test: σ(fixed-μ)/σ(total) = **1.01 (fast), 0.998 (slow)** → freezing
+  μ̂ changes variance by <1%. Dipole reorientation contributes ≈ **0%** to
+  site-energy noise. **Field fluctuations fully dominate.**
+- **Implication for Phase 5:** treat μ̂ as a fixed per-site vector (the
+  time-average) in the exciton Hamiltonian. Dipole-orientation dynamics can be
+  neglected — only δs = −μ̄·E(t) matters, where E(t) carries all the dynamics.
+
+Files: `results/phase3_source_attribution/` — `comp_acf.png`, `comp_tau.csv`,
+`comp_tau_biexp_fast.csv`, `comp_psd.png`, `comp_psd_bysite.png`,
+`comp_band_power.csv`, `dipole_acf.png`, `dmu_reorientation.csv`,
+`dipole_control.csv`.
 
 ---
 
