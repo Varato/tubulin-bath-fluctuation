@@ -20,7 +20,7 @@ critical parameters flowing downstream.
 | 1 — Basic statistics & variance decomp | §2 | ✅ done | `PHASE1_REPORT.md` |
 | 2 — Multi-timescale dynamics | §3 | ✅ done | `PHASE2_REPORT.md` |
 | 3 — Source-resolved attribution | §4 | ✅ done | `PHASE3_REPORT.md` |
-| 4 — Spatial correlation | §5 | ⬜ next | — |
+| 4 — Spatial correlation | §5 | ✅ done | `PHASE4_REPORT.md` |
 | 5 — Exciton dynamics model | §6 | ⬜ pending | — |
 | 6 — Methodological generalization | §7 | ⬜ pending | — |
 
@@ -161,15 +161,15 @@ Files: `results/phase3_source_attribution/` — `comp_acf.png`, `comp_tau.csv`,
 
 ---
 
-## Phase 4 — Spatial Correlation (pending)
+## Phase 4 — Spatial Correlation (done → `PHASE4_REPORT.md`)
 
-**Goal (§5):** test the independent-site-disorder assumption. 8×8 Pearson
-correlation matrices for total/protein/water fluctuations; cross-correlation
-time evolution for representative site pairs.
+**Result:** spatial correlations are negligible. Mean off-diagonal |r| =
+**0.019** (slow traj) — indistinguishable from zero. The independent-site
+assumption holds.
 
-**Key question:** are Trp fluctuations spatially correlated across the dimer?
-If yes, Phase 5's Monte Carlo needs the full 8×8 covariance (not just
-per-site σ).
+**Phase 5 implication:** treat sites as independent. Use per-site σ_total
+(diagonal covariance). Covariance matrix at
+`results/phase4_spatial_correlation/corr_cov_slow.npz`.
 
 ---
 
@@ -200,7 +200,7 @@ criterion (R_slow, τ_slow/T_obs) proposed in §7.2.
 
 ## Critical Parameters for Phase 5
 
-These are the load-bearing numbers from Phases 0–2 that Phase 5 depends on.
+These are the load-bearing numbers from Phases 0–4 that Phase 5 depends on.
 **(Also saved to memory for cross-conversation recall.)**
 
 ### σ_slow and the localization question
@@ -209,9 +209,10 @@ These are the load-bearing numbers from Phases 0–2 that Phase 5 depends on.
   even after removing all fast dynamics. The core conclusion (§8.2 of
   RESEARCH_PLAN) is robust.
 - For the Monte Carlo (Task 5.2): sample from the **full 8×8 covariance of
-  `delta_s_total`** (Phase 4 will fill this in if spatial correlation is
-  significant; per-site σ is the diagonal). Do NOT reconstruct σ from
-  Σσᵢ² — the screening ratio is 0.56–0.66.
+  `delta_s_total`** (Phase 4 result: well-conditioned, cond = 4.7, nearly
+  diagonal with off-diag/diag = −0.003). The independent-site approximation
+  (diagonal only) is excellent — but do NOT reconstruct σ from Σσᵢ² — the
+  screening ratio is 0.56–0.66.
 
 ### τ_fast for the dephasing rate γ_φ = σ_fast² · τ_fast
 - The system has **two** sub-ps timescales. The choice matters:

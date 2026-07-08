@@ -1,0 +1,3 @@
+trajectory,within_cm2,cross_cm2,total_cm2,within_over_sig2,cross_over_sig2,total_over_sig2,spatial_screening_ratio
+slow,6347,-8485,-2138,0.0076,-0.0101,-0.0026,1.337
+fast,41658,-33760,7899,0.0569,-0.0461,0.0108,0.810
