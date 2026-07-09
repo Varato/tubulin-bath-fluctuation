@@ -1,0 +1,46 @@
+{
+  "description": "Local angular deviation of Trp transition dipole, Procrustes-corrected for global protein rotation.",
+  "source": "slow trajectory (10-50 ns, 4001 frames, dt=10 ps)",
+  "n_frames": 4001,
+  "trp_labels": [
+    "aW21",
+    "aW346",
+    "aW388",
+    "aW407",
+    "bW21",
+    "bW101",
+    "bW344",
+    "bW397"
+  ],
+  "trp_pretty": [
+    "\u03b1W21",
+    "\u03b1W346",
+    "\u03b1W388",
+    "\u03b1W407",
+    "\u03b2W21",
+    "\u03b2W101",
+    "\u03b2W344",
+    "\u03b2W397"
+  ],
+  "angular_deviation_lab_deg": [
+    21.566655000152526,
+    27.016468276320232,
+    15.521830574406973,
+    18.95625440338647,
+    14.485754571870613,
+    17.25523184732605,
+    19.280538163463827,
+    38.93267116357308
+  ],
+  "angular_deviation_local_deg": [
+    12.943806765688517,
+    15.03402043834596,
+    12.69289995095614,
+    8.305116299966496,
+    8.558019301233369,
+    10.017726794366293,
+    10.04904036786661,
+    31.879354579730933
+  ],
+  "global_rotation_residual_deg": 10.38750008331534
+}
