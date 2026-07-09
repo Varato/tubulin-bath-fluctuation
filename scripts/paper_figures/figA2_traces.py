@@ -35,22 +35,22 @@ def main():
     ff = ds_fast[::step]
     t_fast = np.arange(len(ff)) * dt_fast * step
 
-    fig, axs = plt.subplots(4, 2, figsize=(9, 8.5), sharex=True)
+    fig, axs = plt.subplots(4, 2, figsize=(11, 9.5), sharex=True)
     for i in range(8):
         ax = axs[i // 2, i % 2]
         ax.plot(t_fast, ff[:, i] - ff[:, i].mean(), color=TRP_COLORS[i],
                 lw=0.6, alpha=0.55, label='fast (10 fs)')
         ax.plot(t_slow, sl[:, i] - sl[:, i].mean(), color='black',
                 lw=1.3, alpha=0.9, label='slow (10 ps)')
-        ax.set_ylabel(TRP_NAMES[i], fontsize=9, rotation=0, labelpad=22,
+        ax.set_ylabel(TRP_NAMES[i], fontsize=13, rotation=0, labelpad=22,
                       va='center')
         if i == 0:
-            ax.legend(loc='upper right', fontsize=7)
+            ax.legend(loc='upper right')
         if i >= 6:
             ax.set_xlabel('window time (ps)')
         ax.set_xlim(0, 2000)
     fig.suptitle('Site-energy fluctuation traces (2 ns window, demeaned)',
-                 y=0.995, fontsize=11)
+                 y=0.995, fontsize=16)
     fig.tight_layout()
     save(fig, 'figA2_traces.png')
     print(f"slow window: {n_win} frames; fast plotted: {len(ff)} frames")

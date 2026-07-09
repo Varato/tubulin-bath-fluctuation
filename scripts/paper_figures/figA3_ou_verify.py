@@ -22,7 +22,7 @@ def main():
     resid = emp - th
 
     fig, (ax1, ax2) = plt.subplots(
-        2, 1, figsize=(8, 5.6), sharex=True,
+        2, 1, figsize=(11, 6.0), sharex=True,
         gridspec_kw={'height_ratios': [3, 1]})
     ax1.semilogx(t, emp, '-', lw=1.5, color='#333', alpha=0.85,
                  label='sampled (3 OU sum)')
@@ -37,7 +37,7 @@ def main():
 
     ax2.semilogx(t, resid, '-', lw=0.6, color='#333')
     ax2.set_xlabel('lag time $t$ (ps)')
-    ax2.set_ylabel('sampled − theory')
+    ax2.set_ylabel('error')
     ax2.set_xlim(t[1], t[-1])
     fig.tight_layout()
     save(fig, 'figA3_ou_verify.png')

@@ -45,7 +45,7 @@ def main():
         fit = sum(amps[i, k] * np.exp(-t_ps / taus[i, k]) for k in range(3))
         ax1.plot(t_ps, fit, '-', color=c, lw=1.4, alpha=0.95, label=TRP_NAMES[i])
     ax1.axvline(T_CROSS_PS, color='gray', ls=':', lw=0.8, alpha=0.6)
-    ax1.text(T_CROSS_PS*1.15, 0.5, '10 ps\nstitch', fontsize=7, color='gray')
+    ax1.text(T_CROSS_PS*1.15, 0.5, '10 ps\nstitch', fontsize=13, color='gray')
     ax1.set_xscale('log'); ax1.set_ylim(-0.05, 1.05)
     ax1.set_xlabel('lag time $t$ (ps)')
     ax1.set_ylabel(r'$C(t)\,/\,C(0)$')
@@ -57,8 +57,8 @@ def main():
         ax2.plot(f_cm, psd[:, i], '-', color=TRP_COLORS[i], lw=1.2,
                  alpha=0.85, label=TRP_NAMES[i])
     ax2.axvline(1.0, color='gray', ls=':', lw=0.8, alpha=0.6)
-    ax2.text(1.1, ax2.get_ylim()[1]*0.3 if ax2.get_yscale()=='linear' else 1e7,
-             '1 cm⁻¹\nstitch', fontsize=7, color='gray')
+    ax2.text(1.1, 10 if ax2.get_yscale()=='linear' else 1e7,
+             '1 cm⁻¹\nstitch', fontsize=13, color='gray')
     ax2.set_xscale('log'); ax2.set_yscale('log')
     ax2.set_xlabel(r'frequency $f$ (cm$^{-1}$)')
     ax2.set_ylabel('PSD (a.u.)')

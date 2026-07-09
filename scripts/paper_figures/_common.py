@@ -42,12 +42,16 @@ CM_TO_THZ = 2.998e-2                # cm^-1 -> THz
 
 
 def setup():
-    """Paper figure style: clean, compact, no chartjunk."""
+    """Paper figure style: clean, compact, no chartjunk.
+
+    Fonts are sized for reproduction: figures are authored wide (~11 in) and
+    downscaled by LaTeX to \columnwidth, so native point sizes are large.
+    """
     mpl.use('Agg')
     plt.rcParams.update({
         'figure.dpi': 130, 'savefig.dpi': 300, 'savefig.bbox': 'tight',
-        'font.size': 10, 'axes.labelsize': 11, 'axes.titlesize': 11,
-        'xtick.labelsize': 9, 'ytick.labelsize': 9, 'legend.fontsize': 8.5,
+        'font.size': 17, 'axes.labelsize': 19, 'axes.titlesize': 16,
+        'xtick.labelsize': 15, 'ytick.labelsize': 15, 'legend.fontsize': 11,
         'axes.grid': True, 'grid.alpha': 0.25, 'axes.axisbelow': True,
         'lines.linewidth': 1.3, 'legend.frameon': False,
         'font.family': 'DejaVu Sans',

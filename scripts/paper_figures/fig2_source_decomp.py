@@ -52,7 +52,7 @@ def main():
     sum_comp = sum(comp_psd.values())
     ratio = trapz(sum_comp, f) / trapz(psd_tot, f)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.5, 4.6),
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.6),
                                    gridspec_kw={'width_ratios': [1.05, 1]})
 
     # ── left: grouped bars + screening markers ──
@@ -65,31 +65,31 @@ def main():
                 linewidth=2.2, label=r'total $\sigma_m$')
     ax1.scatter(x, sigma_unc, facecolor='none', edgecolor='#444', marker='o',
                 s=75, zorder=4, linewidth=1.3,
-                label=r'$\sqrt{\sum_g\sigma_{g,m}^{2}}$ (uncorrelated)')
+                label=r'$\sqrt{\sum_g\sigma_{g,m}^{2}}$')
     # join each total to its uncorrelated circle to emphasise the gap
     for i in range(8):
         ax1.plot([x[i], x[i]], [sigma_tot[i], sigma_unc[i]],
                  color='#444', lw=0.7, alpha=0.5, zorder=3)
-    ax1.set_xticks(x); ax1.set_xticklabels(TRP_NAMES)
-    ax1.set_ylabel(r'RMS $\delta\epsilon_m$ (cm$^{-1}$)')
+    ax1.set_xticks(x); ax1.set_xticklabels(TRP_NAMES, rotation=30, ha='right')
+    ax1.set_ylabel(r'standard deviation (cm$^{-1}$)')
     ax1.set_title('(a) Per-source contribution & screening')
-    ax1.set_ylim(0, 3200)
+    ax1.set_ylim(0, 4000)
     ax1.legend(loc='upper left', ncol=3, columnspacing=1, handlelength=1.2)
     ax1.grid(axis='y', alpha=0.25)
     # RMS-based uncorrelated-sum / total ratio (mirrors the right-panel PSD ratio)
     rms_ratio = float(np.mean(sigma_unc / sigma_tot))
-    ax1.text(0.97, 0.90,
+    ax1.text(0.97, 0.80,
              r'$\langle\sqrt{\sum_g\sigma_{g,m}^{2}}\,/\,\sigma_m\rangle = $'
              f'{rms_ratio:.2f}',
-             transform=ax1.transAxes, va='top', ha='right', fontsize=9,
+             transform=ax1.transAxes, va='top', ha='right', fontsize=10,
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
 
     # ── right: decomposed PSD ──
     # black = measured total; grey = uncorrelated sum of components (screening gap)
     ax2.loglog(f, psd_tot, '-', color='black', lw=2.0, alpha=0.95,
-               label='total (measured)')
+               label=r'$S_{\rm tot}$')
     ax2.loglog(f, sum_comp, '--', color='grey', lw=1.5, alpha=0.9,
-               label=r'$\sum_g S_g$ (uncorrelated)')
+               label=r'$\sum_g S_g$')
     for s in SOURCE_LABELS:
         ax2.loglog(f, comp_psd[s], '-', color=SOURCE_COLORS[s], lw=1.1,
                    alpha=0.8, label=s.capitalize())
@@ -101,7 +101,7 @@ def main():
     ax2.text(0.97, 0.97,
              r'$\int\sum_g S_g\,df\;/\;\int S_{\rm tot}\,df = $'
              f'{ratio:.2f}',
-             transform=ax2.transAxes, va='top', ha='right', fontsize=9,
+             transform=ax2.transAxes, va='top', ha='right', fontsize=10,
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
 
     fig.tight_layout()

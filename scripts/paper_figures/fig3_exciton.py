@@ -23,7 +23,7 @@ def main():
     lb2 = np.load(PAPER_DIR / 'lindblad_2site.npz')
     t = mc['t']; t_fs = t * 1e3
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.5, 4.6), sharey=True,
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.6), sharey=True,
                                    gridspec_kw={'width_ratios': [1, 1],
                                                 'wspace': 0.08})
     ax2.tick_params(labelleft=False)   # shared y-axis: drop duplicate labels
@@ -45,7 +45,7 @@ def main():
     # annotate plateau values at 2 ps
     txt = (f"$P_7(2\\,$ps$)$:  full={mc['full_P7'][-1]:.2f},  "
            f"$\\tau_3$={mc['tau3_P7'][-1]:.2f}")
-    ax1.text(0.03, 0.97, txt, transform=ax1.transAxes, va='top', fontsize=8.5,
+    ax1.text(0.03, 0.97, txt, transform=ax1.transAxes, va='top', fontsize=13,
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
 
     # ── (b) MC vs Lindblad, with Markovian-limit validation ──
@@ -65,10 +65,10 @@ def main():
     ax2.set_xlabel('time (fs)')
     ax2.set_title('(b) MD noise vs Markovian Lindblad')
     ax2.set_xlim(0, t_fs[-1])
-    ax2.legend(loc='lower right')
+    ax2.legend(loc='best', bbox_to_anchor=(1.0, 0.85))
     txt2 = (f"$P_7(2\\,$ps$)$:  MC={mc['full_P7'][-1]:.2f},  "
             f"Lindblad={lb2['P7'][-1]:.2f}")
-    ax2.text(0.03, 0.97, txt2, transform=ax2.transAxes, va='top', fontsize=8.5,
+    ax2.text(0.03, 0.97, txt2, transform=ax2.transAxes, va='top', fontsize=13,
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
 
     fig.tight_layout()

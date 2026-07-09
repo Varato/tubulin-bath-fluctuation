@@ -28,14 +28,14 @@ def main():
     np.fill_diagonal(off, np.nan)
     mean_off = np.nanmean(np.abs(off))
 
-    fig, ax = plt.subplots(figsize=(5.4, 4.8))
+    fig, ax = plt.subplots(figsize=(6.6, 6.0))
     im = ax.imshow(corr, cmap='RdBu_r', vmin=-0.4, vmax=0.4)
-    ax.set_xticks(range(8)); ax.set_xticklabels(TRP_NAMES, fontsize=8)
-    ax.set_yticks(range(8)); ax.set_yticklabels(TRP_NAMES, fontsize=8)
+    ax.set_xticks(range(8)); ax.set_xticklabels(TRP_NAMES)
+    ax.set_yticks(range(8)); ax.set_yticklabels(TRP_NAMES)
     for i in range(8):
         for j in range(8):
             ax.text(j, i, f'{corr[i,j]:.2f}', ha='center', va='center',
-                    fontsize=7, color='black')
+                    fontsize=12, color='black')
     cb = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     cb.set_label('Pearson $r$')
     ax.set_title(f'Spatial correlation (slow traj)\n'
