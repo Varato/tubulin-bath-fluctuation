@@ -48,16 +48,22 @@ def main():
     ax1.text(0.03, 0.97, txt, transform=ax1.transAxes, va='top', fontsize=8.5,
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
 
-    # ── (b) MC vs Lindblad ──
+    # ── (b) MC vs Lindblad, with Markovian-limit validation ──
     ax2.plot(t_fs, mc['full_P7'], '-', color='black', lw=1.7,
              label='trajectory MC (MD noise)')
     ax2.fill_between(t_fs, mc['full_P7'] - mc['full_P7_sem'],
                      mc['full_P7'] + mc['full_P7_sem'], color='black', alpha=0.15)
     ax2.plot(lb2['t'] * 1e3, lb2['P7'], '--', color='#1f77b4', lw=1.7,
              label=r'Lindblad, $\gamma=50$ cm$^{-1}$')
+    # white-noise-limit MC: sigma^2 tau matched to gamma -> must track Lindblad
+    wn_path = PAPER_DIR / 'whitenoise_mc.npz'
+    if wn_path.exists():
+        wn = np.load(wn_path)
+        ax2.plot(wn['t'] * 1e3, wn['P7'], '-', color='#1f77b4', lw=1.3,
+                 alpha=0.9, label=r'MC, white-noise limit ($\sigma^2\tau{=}\gamma$)')
     ax2.axhline(0.5, color='#1f77b4', ls=':', lw=0.7, alpha=0.5)
     ax2.set_xlabel('time (fs)')
-    ax2.set_title('(b) Exact MD noise vs Markovian Lindblad')
+    ax2.set_title('(b) MD noise vs Markovian Lindblad')
     ax2.set_xlim(0, t_fs[-1])
     ax2.legend(loc='lower right')
     txt2 = (f"$P_7(2\\,$ps$)$:  MC={mc['full_P7'][-1]:.2f},  "
