@@ -49,24 +49,36 @@ def main():
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
 
     # ── (b) MC vs Lindblad, with Markovian-limit validation ──
+    # individual MD-noise trajectories (bottom layer): each oscillates coherently,
+    # dephasing across realisations gives the smooth average (black, on top).
+    real_path = PAPER_DIR / 'mc_realizations.npz'
+    if real_path.exists():
+        P7r = np.load(real_path)['P7']   # (N_real_show, N_STEPS)
+        ax2.plot(t_fs, P7r.T, color='#9e9e9e', alpha=0.35, lw=0.55, zorder=1)
+        ax2.plot([], [], color='#9e9e9e', alpha=0.7, lw=1.5,
+                 label='individual MC')
     ax2.plot(t_fs, mc['full_P7'], '-', color='black', lw=1.7,
-             label='trajectory MC (MD noise)')
+             label='MC (MD bath)', zorder=4)
     ax2.fill_between(t_fs, mc['full_P7'] - mc['full_P7_sem'],
-                     mc['full_P7'] + mc['full_P7_sem'], color='black', alpha=0.15)
+                     mc['full_P7'] + mc['full_P7_sem'], color='black', alpha=0.15,
+                     zorder=3)
     ax2.plot(lb2['t'] * 1e3, lb2['P7'], '--', color='#1f77b4', lw=1.7,
-             label=r'Lindblad, $\gamma=50$ cm$^{-1}$')
+             label='Lindblad', zorder=4)
     # white-noise-limit MC: sigma^2 tau matched to gamma -> must track Lindblad
     wn_path = PAPER_DIR / 'whitenoise_mc.npz'
     if wn_path.exists():
         wn = np.load(wn_path)
         ax2.plot(wn['t'] * 1e3, wn['P7'], '-', color='#1f77b4', lw=1.3,
-                 alpha=0.9, label=r'MC, white-noise limit ($\sigma^2\tau{=}\gamma$)')
+                 alpha=0.9, label='white-noise MC',
+                 zorder=4)
     ax2.axhline(0.5, color='#1f77b4', ls=':', lw=0.7, alpha=0.5)
     ax2.set_xlabel('time (fs)')
     ax2.set_title('(b) MD noise vs Markovian Lindblad')
     ax2.set_xlim(0, t_fs[-1])
-    ax2.legend(loc='best', bbox_to_anchor=(1.0, 0.85))
-    txt2 = (f"$P_7(2\\,$ps$)$:  MC={mc['full_P7'][-1]:.2f},  "
+    ax2.legend(loc='upper right', bbox_to_anchor=(1.0, 0.85),
+               ncol=2,
+               columnspacing=1.0, handlelength=1.5, borderpad=0.4)
+    txt2 = (f"$P_7(2\\,$ps$)$: "
             f"Lindblad={lb2['P7'][-1]:.2f}")
     ax2.text(0.03, 0.97, txt2, transform=ax2.transAxes, va='top', fontsize=13,
              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#bbb', alpha=0.9))
