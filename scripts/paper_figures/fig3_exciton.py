@@ -93,8 +93,9 @@ def main():
     ax = axes[0, 1]
     d = np.load(PAPER_DIR / 'mc_realizations.npz')
     P7r = d['P7']
-    ax.plot(t_fs, P7r.T, color='gray', alpha=0.3, lw=0.5)
-    ax.plot([], [], color='gray', alpha=0.6, lw=1.5, label='individual MC')
+    print(P7r.shape)
+    ax.plot(t_fs, P7r[:5].T, color='gray', alpha=0.5, lw=1)
+    ax.plot([], [], color='gray', alpha=0.6, lw=1, label='individual MC')
     ax.plot(t_fs, mc['full_P7'], color='black', lw=2.2, label='ensemble avg')
     ax.fill_between(t_fs, mc['full_P7'] - mc['full_P7_sem'],
                      mc['full_P7'] + mc['full_P7_sem'], color='black', alpha=0.12)
