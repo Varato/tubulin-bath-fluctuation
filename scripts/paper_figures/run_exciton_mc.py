@@ -61,7 +61,7 @@ def load_site_params():
     return sig, tri
 
 # ── grid ──
-DT, T_MAX = 0.002, 2.0
+DT, T_MAX = 0.002, 4.0
 TLIST = np.arange(0, T_MAX + DT / 2, DT)
 N_STEPS = len(TLIST)
 N_REAL = 500
@@ -101,8 +101,8 @@ def run_ensemble(sig4, sig7, amps4, taus4, amps7, taus7, n_real, H0):
     coh = np.zeros((n_real, N_STEPS))
     for i in range(n_real):
         rng = np.random.default_rng(42 + i)
-        n4 = gen_noise(N_STEPS, DT, sig4, amps4, taus4, rng)
-        n7 = gen_noise(N_STEPS, DT, sig7, amps7, taus7, rng)
+        n4 = gen_noise(N_STEPS, DT, sig4, amps4, taus4, rng) * CM_TO_RADPS
+        n7 = gen_noise(N_STEPS, DT, sig7, amps7, taus7, rng) * CM_TO_RADPS
         H_t = [H0, [N4, n4], [N7, n7]]
         r = qt.sesolve(H_t, PSI0, TLIST, e_ops=[N4, N7, SM])
         P4[i], P7[i], coh[i] = r.expect[0], r.expect[1], np.abs(r.expect[2])
@@ -170,6 +170,7 @@ def main():
         ('tau2',      cfg({1})),
         ('tau1_tau2', cfg({0, 1})),
         ('full',      cfg({0, 1, 2})),
+        ('tau1_tau3', cfg({0, 2})),
         ('tau3',      cfg({2})),
     ]
     out = dict(t=TLIST,

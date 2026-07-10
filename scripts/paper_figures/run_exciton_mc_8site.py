@@ -67,7 +67,7 @@ def run_realization(sig, tri, rng, keep_modes) -> np.ndarray:
     P[:, 0] = np.abs(psi) ** 2
     for i in range(1, M.N_STEPS):
         H = H0.copy()
-        H[np.diag_indices(N_SITE)] += noises[:, i]
+        H[np.diag_indices(N_SITE)] += noises[:, i] * M.CM_TO_RADPS
         psi = expm(-1j * H * M.DT) @ psi
         P[:, i] = np.abs(psi) ** 2
     return P

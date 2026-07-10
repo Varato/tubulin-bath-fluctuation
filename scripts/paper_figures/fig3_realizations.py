@@ -34,7 +34,7 @@ def run_one(s4, s7, a4, t4, a7, t7, H0, seed):
     P4 = np.zeros(M.N_STEPS); P7 = np.zeros(M.N_STEPS)
     P4[0] = abs(psi[0])**2; P7[0] = abs(psi[1])**2
     for i in range(1, M.N_STEPS):
-        H = H0 + np.diag([n4[i], n7[i]])
+        H = H0 + np.diag([n4[i], n7[i]]) * CM_TO_RADPS
         psi = expm(-1j * H * M.DT) @ psi
         P4[i] = abs(psi[0])**2; P7[i] = abs(psi[1])**2
     return P4, P7
