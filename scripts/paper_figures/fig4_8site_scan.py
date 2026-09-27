@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _common import setup, PAPER_DIR
+from _common import setup, save, PAPER_DIR
 
 N_SITE = 8
 COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
@@ -55,12 +55,7 @@ def main():
     axes[0, 0].legend(handles=legend_lines, ncol=3, fontsize=7.5,
                       loc='center left')
 
-    p_png = PAPER_DIR / 'fig4_8site_scan.png'
-    p_pdf = PAPER_DIR / 'fig4_8site_scan.pdf'
-    fig.savefig(p_png, dpi=300)
-    fig.savefig(p_pdf)
-    plt.close(fig)
-    print(f"saved {p_png}")
+    save(fig, 'fig4_8site_scan.png')
 
 
 if __name__ == '__main__':

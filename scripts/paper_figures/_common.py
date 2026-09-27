@@ -59,14 +59,20 @@ def setup():
 
 
 def save(fig, name: str) -> Path:
-    """Save a figure as both PNG (preview) and PDF (for LaTeX)."""
+    """Save a figure as PNG (preview) + PDF (for LaTeX) + transparent PNG.
+
+    The ``<name>_t.png`` variant has a transparent figure/axes background,
+    for the poster (gradient blue background). Text/lines keep their colors.
+    """
     stem = PAPER_DIR / name
     if stem.suffix == '.png':
         stem = stem.with_suffix('')
     p_png = stem.with_suffix('.png')
     p_pdf = stem.with_suffix('.pdf')
+    p_t = stem.with_name(stem.name + '_t.png')
     fig.savefig(p_png)
     fig.savefig(p_pdf)
+    fig.savefig(p_t, transparent=True, dpi=300)
     plt.close(fig)
-    print(f"  saved {p_png}  +  {p_pdf}")
+    print(f"  saved {p_png}  +  {p_pdf}  +  {p_t}")
     return p_png

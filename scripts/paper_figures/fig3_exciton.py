@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _common import setup, PAPER_DIR, CM_TO_RADPS
+from _common import setup, save, PAPER_DIR, CM_TO_RADPS
 
 
 def main():
@@ -144,12 +144,7 @@ def main():
     ax.set_title(r'(d) Scan noise amplitude ($T_{\mathrm{OU}}=50$ fs)')
     ax.set_ylim(0, 0.7)
 
-    p_png = PAPER_DIR / 'fig3_exciton.png'
-    p_pdf = PAPER_DIR / 'fig3_exciton.pdf'
-    fig.savefig(p_png, dpi=300)
-    fig.savefig(p_pdf)
-    plt.close(fig)
-    print(f"saved {p_png}")
+    save(fig, 'fig3_exciton.png')
 
 
 if __name__ == '__main__':
